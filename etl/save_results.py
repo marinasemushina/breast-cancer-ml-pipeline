@@ -1,25 +1,20 @@
-import argparse
 import shutil
 import os
+import config
 
-def save_results(model_path, metrics_path, storage_dir):
-    # Создаем директорию для хранения, если она не существует
-    os.makedirs(storage_dir, exist_ok=True)
-    
-    # Копируем модель и метрики в указанную директорию
-    shutil.copy(model_path, os.path.join(storage_dir, os.path.basename(model_path)))
-    shutil.copy(metrics_path, os.path.join(storage_dir, os.path.basename(metrics_path)))
-    
-    print(f"Copied model and metrics to {storage_dir}")
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Save results to storage")
-    parser.add_argument("--model", required=True, help="Path to model file")
-    parser.add_argument("--metrics", required=True, help="Path to metrics file")
-    parser.add_argument("--storage", required=True, help="Path to storage directory (local or mounted cloud)")
-    
-    args = parser.parse_args()
-    
-    # Вызываем функцию для сохранения результатов
-    save_results(args.model, args.metrics, args.storage)
+def save_to_storage(source_paths, dest_dir=None):
+    if dest_dir is None:
+        dest_dir = config.RESULTS_DIR
+    os.makedirs(dest_dir, exist_ok=True)
+    for p in source_paths:
+        shutil.copy(p, dest_dir)
+
+if __name__ == '__main__':
+    paths = [
+        os.path.join(config.RESULTS_DIR, config.MODEL_FILE),
+        os.path.join(config.RESULTS_DIR, config.METRICS_FILE)
+    ]
+    save_to_storage(paths)
+    print('Results saved')
 
