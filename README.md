@@ -132,4 +132,6 @@ Failure Callbacks: В случае сбоя задачи вызывается с
 Все ключевые операции обернуты в блоки try-except, что позволяет ловить и обрабатывать исключения, не останавливая весь пайплайн.
 
 ## Скриншот работающего DAG (Airflow)
+![Снимок экрана 2025-06-17 в 14 38 29](https://github.com/user-attachments/assets/c27be577-396a-4ef3-bdf4-374c6245fd05)
+
 ![Снимок экрана 2025-06-17 в 14 38 54](https://github.com/user-attachments/assets/4540cc9e-eafd-46c9-8573-e1ec1a8ff87f)
