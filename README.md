@@ -19,19 +19,22 @@
 
 ## 2. Структура пайплайна
 
+```
 .
 
-├── dags/                                                                   # Airflow DAG
+├── dags/                                     # Airflow DAG
 
-├── etl/                                                                    # Modular ETL scripts
+├── etl/                                      # Modular ETL scripts
 
-├── results/                                                                # Saved model and metrics
+├── results/                                  # Saved model and metrics
 
-├── logs/                                                                   # Airflow logs
+├── logs/                                     # Airflow logs
 
-├── config.py                                                               # Paths configuration
+├── config.py                                 # Paths configuration
 
 └── README.md
+
+```
 
 Пайплайн состоит из следующих этапов:
 
