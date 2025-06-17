@@ -1,29 +1,33 @@
-import argparse
-import joblib
+import pandas as pd
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.model_selection import train_test_split
+import joblib
 import json
 import os
+import config
 
-def evaluate(model_path, metrics_path):
-    data = joblib.load(model_path)
-    model = data['model']
-    X_test = data['X_test']
-    y_test = data['y_test']
-    y_pred = model.predict(X_test)
+
+def evaluate(data_path, model_path=None, metrics_path=None):
+    df = pd.read_csv(data_path)
+    X = df.drop('target', axis=1)
+    y = df['target']
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    if model_path is None:
+        model_path = os.path.join(config.RESULTS_DIR, config.MODEL_FILE)
+    model = joblib.load(model_path)
+    preds = model.predict(X_test)
     metrics = {
-        "accuracy": accuracy_score(y_test, y_pred),
-        "precision": precision_score(y_test, y_pred),
-        "recall": recall_score(y_test, y_pred),
-        "f1_score": f1_score(y_test, y_pred)
+        'accuracy': accuracy_score(y_test, preds),
+        'precision': precision_score(y_test, preds),
+        'recall': recall_score(y_test, preds),
+        'f1': f1_score(y_test, preds)
     }
-    os.makedirs(os.path.dirname(metrics_path), exist_ok=True)
+    if metrics_path is None:
+        metrics_path = os.path.join(config.RESULTS_DIR, config.METRICS_FILE)
     with open(metrics_path, 'w') as f:
-        json.dump(metrics, f, indent=4)
-    print(f"Saved metrics to {metrics_path}")
+        json.dump(metrics, f, indent=2)
+    return metrics_path
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Evaluate model")
-    parser.add_argument("--model", required=True, help="Path to model and test data")
-    parser.add_argument("--metrics", required=True, help="Path to save metrics JSON")
-    args = parser.parse_args()
-    evaluate(args.model, args.metrics)
+if __name__ == '__main__':
+    data_path = os.path.join(config.RESULTS_DIR, config.DATA_FILE)
+    evaluate(data_path)
